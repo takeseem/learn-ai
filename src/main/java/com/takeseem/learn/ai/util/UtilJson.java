@@ -1,0 +1,52 @@
+package com.takeseem.learn.ai.util;
+
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
+/**
+ * @author <a href="https://github.com/takeseem">杨浩</a>
+ */
+public class UtilJson {
+	private static final ObjectMapper mapper = init(new ObjectMapper());
+	private static final ObjectWriter pretty = mapper.writerWithDefaultPrettyPrinter();
+
+	/**
+	 * 基本配置初始化(允许name双引号单引号无引号, 不输出null值，而content.includeAlways), 遇到unknown属性不fail
+	 */
+	public static ObjectMapper init(ObjectMapper mapper) {
+		// 允许不带引号
+		mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+		// 允许单引号
+		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+		// 输出非空
+		mapper.setSerializationInclusion(Include.NON_NULL);
+		// 缺省属性？
+		mapper.setDefaultPropertyInclusion(Include.NON_NULL);
+		// 不知道的属性，不异常
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		// 禁用empty bean时异常
+		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+		return mapper;
+	}
+
+	public static String write(Object value) {
+		try {
+			return mapper.writeValueAsString(value);
+		} catch (JsonProcessingException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
+
+	public static String writePretty(Object value) {
+		try {
+			return pretty.writeValueAsString(value);
+		} catch (JsonProcessingException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
+}

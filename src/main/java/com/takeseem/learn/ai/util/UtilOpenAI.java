@@ -22,6 +22,7 @@ public class UtilOpenAI {
 	 * <li>openai.maxRetries = 0</li>
 	 * <li>openai.proxy = http://127.0.0.1:8888</li>
 	 * <li>openai.proxy.ca = 证书路径</li>
+	 * <li>openai.baseUrl = 中转URL https://openai.zz.com</li>
 	 * </ul>
 	 */
 	public static OpenAIOkHttpClient.Builder setup(OpenAIOkHttpClient.Builder builder) {
@@ -42,6 +43,9 @@ public class UtilOpenAI {
 				builder.trustManager(trustManager).sslSocketFactory(sslContext.getSocketFactory());
 			}
 		}
+
+		String baseUrl = props.getProperty("openai.baseUrl");
+		if (UtilString.isNotEmpty(baseUrl)) builder.baseUrl(baseUrl);
 
 		return builder;
 	}
