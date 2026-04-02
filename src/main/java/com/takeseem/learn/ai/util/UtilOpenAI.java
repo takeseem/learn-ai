@@ -9,7 +9,10 @@ import java.util.Properties;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.chat.completions.ChatCompletion;
 
 /**
  * @author <a href="https://github.com/takeseem">杨浩</a>
@@ -48,5 +51,28 @@ public class UtilOpenAI {
 		if (UtilString.isNotEmpty(baseUrl)) builder.baseUrl(baseUrl);
 
 		return builder;
+	}
+
+	public static String toStr(ChatCompletion c) {
+		String str = "";
+
+		var n = UtilJson.convert(c, ObjectNode.class);
+		JsonNode message = n.path("choices").get(0).path("message");
+		String reasoningContent = message.path("reasoning_content").asText();
+		if (UtilString.isNotEmpty(reasoningContent))
+			str += "Reasoning >\n----\n" + reasoningContent.trim() + "\n----\n\n";
+
+		str += message.path("role").asText() + " >\n----\n" + message.path("content").asText().trim() + "\n----\n";
+
+		str += n.path("model").asText() + '\n';
+		JsonNode usage = n.path("usage");
+		int compTokens = usage.path("completion_tokens").asInt();
+		int reasTokens = usage.path("completion_tokens_details").path("reasoning_tokens").asInt();
+		str += "Tokens: " + usage.path("total_tokens") + " (prompt: " + usage.path("prompt_tokens") + ", completion: "
+				+ compTokens
+				+ (reasTokens > 0 ? " (reasoning: " + reasTokens + ", content: " + (compTokens - reasTokens) + ")" : "")
+				+ ")\n----\n";
+
+		return str;
 	}
 }

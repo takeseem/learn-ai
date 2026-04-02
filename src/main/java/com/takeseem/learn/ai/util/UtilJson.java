@@ -49,4 +49,8 @@ public class UtilJson {
 			throw new IllegalArgumentException(e);
 		}
 	}
+
+	public static <T> T convert(Object src, Class<T> clazz) {
+		return mapper.convertValue(src, clazz);
+	}
 }

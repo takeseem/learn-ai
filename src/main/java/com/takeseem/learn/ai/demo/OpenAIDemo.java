@@ -7,7 +7,6 @@ import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.ChatModel;
 import com.openai.models.chat.completions.ChatCompletion;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
-import com.takeseem.learn.ai.util.UtilJson;
 import com.takeseem.learn.ai.util.UtilOpenAI;
 import com.takeseem.learn.ai.util.UtilSys;
 
@@ -24,7 +23,7 @@ public class OpenAIDemo {
 		var params = ChatCompletionCreateParams.builder().model(ChatModel.of(chatModel)).addUserMessage("你好").build();
 
 		ChatCompletion chatCompletion = client.chat().completions().create(params);
-		System.out.println(UtilJson.writePretty(chatCompletion));
+		System.out.println(UtilOpenAI.toStr(chatCompletion));
 	}
 
 }
