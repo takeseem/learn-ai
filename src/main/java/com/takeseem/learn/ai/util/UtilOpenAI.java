@@ -50,6 +50,10 @@ public class UtilOpenAI {
 		String baseUrl = props.getProperty("openai.baseUrl");
 		if (UtilString.isNotEmpty(baseUrl)) builder.baseUrl(baseUrl);
 
+		String apiKey = System.getenv("OPENAI_API_KEY");
+		if (apiKey == null) apiKey = props.getProperty("openai.apiKey");
+		builder.apiKey(apiKey);
+
 		return builder;
 	}
 

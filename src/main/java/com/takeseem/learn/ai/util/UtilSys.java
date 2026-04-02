@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -84,6 +86,14 @@ public class UtilSys {
 			return sslContext;
 		} catch (NoSuchAlgorithmException | KeyManagementException e) {
 			throw new IllegalStateException(e);
+		}
+	}
+
+	public static String readText(String name) {
+		try (var reader = new InputStreamReader(getResourceAsStream(name), StandardCharsets.UTF_8)) {
+			return reader.readAllAsString();
+		} catch (IOException e) {
+			throw new IllegalArgumentException("name = " + name, e);
 		}
 	}
 }
