@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -52,5 +53,13 @@ public class UtilJson {
 
 	public static <T> T convert(Object src, Class<T> clazz) {
 		return mapper.convertValue(src, clazz);
+	}
+
+	public static JsonNode readTree(String json) {
+		try {
+			return mapper.readTree(json);
+		} catch (JsonProcessingException e) {
+			throw new IllegalArgumentException("json = " + json, e);
+		}
 	}
 }

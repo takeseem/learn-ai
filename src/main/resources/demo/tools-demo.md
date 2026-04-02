@@ -1,6 +1,6 @@
 假设有以下工具：
 
-- 文件写入 `UtilFile.writeFile(args)`，args 是 json 格式 `{"file": "文件路径", "content": "要写入的文本"})`
+- 文件写入 `UtilFile.writeFile(args)`，args 是 json 格式 `{"file": "文件路径", "content": "要写入的文本", "append": "boolean: 可选值，是否追加"}`)`
 
 
 任务要求：

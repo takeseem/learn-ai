@@ -25,4 +25,14 @@ public class UtilString {
 
 		return path;
 	}
+
+	public static String sub(String text, String prefix, String suffix) {
+		int pos1 = text.indexOf(prefix);
+		if (pos1 == -1) return null;
+
+		int pos2 = text.lastIndexOf(suffix);
+		if (pos2 == -1 || pos2 < pos1) return null;
+
+		return text.substring(pos1 + prefix.length(), pos2);
+	}
 }
