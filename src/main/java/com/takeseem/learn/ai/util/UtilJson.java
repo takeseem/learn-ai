@@ -62,4 +62,20 @@ public class UtilJson {
 			throw new IllegalArgumentException("json = " + json, e);
 		}
 	}
+
+	public static boolean isObjectNode(String text) {
+		if (text == null) return false;
+
+		String json = text.trim();
+		if (json.length() < 2 || json.charAt(0) != '{' || json.charAt(json.length() - 1) != '}') {
+			return false;
+		}
+
+		try {
+			mapper.readTree(json);
+			return true;
+		} catch (JsonProcessingException e) {
+			return false;
+		}
+	}
 }

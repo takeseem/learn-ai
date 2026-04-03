@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.ChatModel;
+import com.openai.models.ReasoningEffort;
 import com.openai.models.chat.completions.ChatCompletion;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
 import com.openai.services.blocking.chat.ChatCompletionService;
@@ -39,7 +40,7 @@ public class ReActDemo {
 		String sysPrompt = UtilSys.readText("demo/react-demo.md");
 		out.println("system prompt: \n----\n" + sysPrompt + "\n----");
 		ChatCompletionCreateParams.Builder builder = ChatCompletionCreateParams.builder().model(ChatModel.of(model))
-				.addSystemMessage(sysPrompt);
+				.addSystemMessage(sysPrompt).reasoningEffort(ReasoningEffort.LOW);
 
 		var demo = "把1到10的整数写入文件中";
 		for (String tips = "ReAct Demo\n----\n请输入你的任务：";;) {
@@ -83,7 +84,7 @@ public class ReActDemo {
 	}
 
 	private static String doAction(String content) {
-		String json = UtilString.sub(content, "```json", "```");
+		String json = UtilJson.isObjectNode(content) ? content : UtilString.sub(content, "```json", "```");
 		if (json == null) return null;
 
 		out.println("Action: \n----\n" + json.trim() + "\n----");
