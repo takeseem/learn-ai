@@ -79,4 +79,9 @@ public class UtilOpenAI {
 
 		return str;
 	}
+
+	/** @return choices[0].message.content */
+	public static String getContent(ChatCompletion c) {
+		return c.choices().get(0).message().content().get();
+	}
 }

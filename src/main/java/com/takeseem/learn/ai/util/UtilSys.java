@@ -92,7 +92,7 @@ public class UtilSys {
 	public static String readText(String name) {
 		try (var reader = new InputStreamReader(getResourceAsStream(name), StandardCharsets.UTF_8)) {
 			return reader.readAllAsString();
-		} catch (IOException e) {
+		} catch (NullPointerException | IOException e) {
 			throw new IllegalArgumentException("name = " + name, e);
 		}
 	}

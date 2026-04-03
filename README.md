@@ -5,6 +5,11 @@
 - 缩进：Tab
 - All respond in Chinese.
 
+## 注意
+
+- 模型能力：不同模型对 prompt 的理解是完全不同的，模型的智力就如同小学生和大学生的区别，不要期望一个低等模型能理解你的需求。
+- 参数量越低越不能处理复杂的问题，token 越少越好。
+
 ## 功能
 
 1. [OpenAIDemo](src/main/java/com/takeseem/learn/ai/demo/OpenAIDemo.java)：调用大模型，openai 兼容的都支持
@@ -14,3 +19,4 @@
     - 行动（Acting）：执行工具调用或生成最终答案
     - 观察（Observation）：接收工具执行的结果
     - 迭代：基于观察结果继续思考和行动，直到完成任务
+
