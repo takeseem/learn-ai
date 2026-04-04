@@ -27,10 +27,14 @@ public class UtilString {
 	}
 
 	public static String sub(String text, String prefix, String suffix) {
+		return sub(text, prefix, suffix, false);
+	}
+
+	public static String sub(String text, String prefix, String suffix, boolean max) {
 		int pos1 = text.indexOf(prefix);
 		if (pos1 == -1) return null;
 
-		int pos2 = text.lastIndexOf(suffix);
+		int pos2 = max ? text.lastIndexOf(suffix) : text.indexOf(suffix, pos1 + prefix.length());
 		if (pos2 == -1 || pos2 < pos1) return null;
 
 		return text.substring(pos1 + prefix.length(), pos2);

@@ -84,13 +84,25 @@ public class ReActDemo {
 	}
 
 	private static String doAction(String content) {
-		String json = UtilJson.isObjectNode(content) ? content : UtilString.sub(content, "```json", "```");
-		if (json == null) return null;
+		var ret = new StringBuilder();
+		for (int pos = 0;;) {
+			String tmp = content.substring(pos);
+			String code;
+			if (UtilJson.isObjectNode(tmp)) {
+				code = tmp;
+				pos += code.length();
+			} else {
+				code = UtilString.sub(tmp, "```json", "```");
+				if (code == null) break;
+				pos += tmp.indexOf(code) + code.length() + "```".length();
+			}
 
-		out.println("Action: \n----\n" + json.trim() + "\n----");
-		var result = ToolRepo.invokeTool((ObjectNode) UtilJson.readTree(json));
-		out.println(result + "\n----");
-		return result.toString();
+			out.println("Action: \n----\n" + code.trim() + "\n----");
+			var result = ToolRepo.invokeTool((ObjectNode) UtilJson.readTree(code));
+			out.println(result + "\n----");
+			ret.append(result).append('\n');
+		}
+		return ret.toString();
 	}
 
 }
