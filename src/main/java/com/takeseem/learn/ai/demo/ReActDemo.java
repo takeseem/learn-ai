@@ -54,8 +54,8 @@ public class ReActDemo {
 			if (prompt.trim().isEmpty() && demo != null) {
 				out.println("示例任务：" + demo);
 				prompt = demo;
-				demo = null;
 			}
+			demo = null;
 			out.println("----");
 			if (UtilString.isNotEmpty(prompt)) builder.addUserMessage(prompt);
 
