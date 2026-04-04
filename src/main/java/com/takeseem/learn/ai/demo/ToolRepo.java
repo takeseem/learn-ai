@@ -37,7 +37,13 @@ public class ToolRepo {
 		var file = new File(args.path("file").asText());
 
 		File dir = file.getParentFile();
-		if (dir != null && !dir.exists()) throw new IllegalArgumentException("目录不存在：" + dir);
+		if (dir != null && !dir.exists()) {
+			if (args.path("mkdirs").asBoolean()) {
+				dir.mkdirs();
+			} else {
+				throw new IllegalArgumentException("目录不存在：" + dir);
+			}
+		}
 
 		String content = args.path("content").asText();
 		try (var out = new FileOutputStream(file, append)) {
