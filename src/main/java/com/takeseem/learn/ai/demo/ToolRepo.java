@@ -48,11 +48,11 @@ public class ToolRepo {
 
 	public static String mkdirs(ObjectNode n) {
 		JsonNode args = n.path("args");
-		var file = new File(args.path("file").asText());
-		if (file.exists()) return "目录已经存在：" + file;
+		var dir = new File(args.path("dir").asText());
+		if (dir.exists()) return "目录已经存在：" + dir;
 
-		boolean ret = file.mkdirs();
-		return "创建目录：" + file + "，结果：" + ret;
+		boolean ret = dir.mkdirs();
+		return "创建目录：" + dir + "，结果：" + ret;
 	}
 
 	public static String readText(ObjectNode n) {
