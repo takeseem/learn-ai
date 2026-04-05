@@ -10,6 +10,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.chat.completions.ChatCompletion;
@@ -61,12 +62,19 @@ public class UtilOpenAI {
 		String str = "";
 
 		var n = UtilJson.convert(c, ObjectNode.class);
-		JsonNode message = n.path("choices").get(0).path("message");
-		String reasoningContent = message.path("reasoning_content").asText();
-		if (UtilString.isNotEmpty(reasoningContent))
-			str += "Reasoning >\n----\n" + reasoningContent.trim() + "\n----\n\n";
+		JsonNode choice = n.path("choices").get(0);
+		str += "choice finish_reason: " + choice.path("finish_reason").asText() + " >\n----\n";
 
-		str += message.path("role").asText() + " >\n----\n" + message.path("content").asText().trim() + "\n----\n";
+		JsonNode message = choice.path("message");
+		String reasoningContent = message.path("reasoning_content").asText();
+		if (UtilString.isNotEmpty(reasoningContent)) {
+			str += "Reasoning >\n----\n" + reasoningContent.trim() + "\n----\n\n";
+		}
+
+		str += message.path("role").asText() + "\n----\n" + message.path("content").asText().trim();
+
+		str += "tool_calls: " + toToolCallsStr(message.withArrayProperty("tool_calls"));
+		str += "\n----\n";
 
 		str += n.path("model").asText() + '\n';
 		JsonNode usage = n.path("usage");
@@ -78,6 +86,18 @@ public class UtilOpenAI {
 				+ ")\n----\n";
 
 		return str;
+	}
+
+	public static String toToolCallsStr(ArrayNode toolCalls) {
+		if (toolCalls.isEmpty()) return "[]";
+
+		var buf = new StringBuilder();
+		buf.append("[\n");
+		for (JsonNode n : toolCalls) {
+			buf.append('\t').append(n.path("id").asText()).append(" ").append(n.path("type").asText()).append(" ")
+					.append(n.path("function")).append(",\n");
+		}
+		return buf.deleteCharAt(buf.length() - 2).append("]").toString();
 	}
 
 	/** @return choices[0].message.content */
