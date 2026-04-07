@@ -9,7 +9,10 @@ import java.nio.charset.StandardCharsets;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.ChatModel;
 import com.openai.models.chat.completions.ChatCompletion;
+import com.openai.models.chat.completions.ChatCompletion.Choice;
+import com.openai.models.chat.completions.ChatCompletion.Choice.FinishReason;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
+import com.openai.models.chat.completions.ChatCompletionToolMessageParam;
 import com.openai.services.blocking.chat.ChatCompletionService;
 import com.takeseem.learn.ai.util.UtilOpenAI;
 import com.takeseem.learn.ai.util.UtilString;
@@ -40,6 +43,8 @@ public class ReActToolsDemo {
 		out.println("model: " + model);
 		ChatCompletionCreateParams.Builder builder = ChatCompletionCreateParams.builder().model(ChatModel.of(model));
 
+		builder.addFunctionTool(ToolRepo.getWriteFileFuncDef());
+
 		var demo = "把1到10的整数写入文件中";
 		for (String tips = "ReAct Demo\n----\n请输入你的任务：";;) {
 			if (tips != null) {
@@ -57,21 +62,33 @@ public class ReActToolsDemo {
 			out.println("----");
 			if (UtilString.isNotEmpty(prompt)) builder.addUserMessage(prompt);
 
-			ChatCompletion completion = doChat(builder.build());
-			String content = UtilOpenAI.getContent(completion);
-			if (content.length() <= 4) break;
-			builder.addAssistantMessage(content);
+			ChatCompletion completion = service.create(builder.build());
+			out.println(UtilOpenAI.toStr(completion));
+
+			Choice c = completion.choices().getFirst();
+			FinishReason finishReason = c.finishReason();
+			if (UtilOpenAI.isStop(finishReason)) {
+				String content = c.message().content().get();
+				if (content.length() <= 4) break;
+				builder.addAssistantMessage(content);
+			} else if (UtilOpenAI.isToolCalls(finishReason)) {
+				builder.addMessage(c.message());
+				c.message().toolCalls().get().forEach(v -> {
+					if (v.isFunction()) {
+						var fun = v.asFunction();
+						out.println("tool call id: " + fun.id() + ", name: " + fun.function().name() + ": \n----\n");
+						Object result = ToolRepo.invokeTool(fun);
+						out.println("result: " + result + "\n----");
+						builder.addMessage(ChatCompletionToolMessageParam.builder().toolCallId(fun.id())
+								.content(result == null ? "task completed success." : result.toString()).build());
+					}
+				});
+			}
 			out.print("回车继续：");
 		}
 	}
 
 	private static ChatCompletionService service = UtilOpenAI.setup(OpenAIOkHttpClient.builder()).build().chat()
 			.completions();
-
-	private static ChatCompletion doChat(ChatCompletionCreateParams params) {
-		ChatCompletion completion = service.create(params);
-		out.println(UtilOpenAI.toStr(completion));
-		return completion;
-	}
 
 }

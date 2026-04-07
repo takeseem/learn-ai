@@ -4,7 +4,9 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Proxy.Type;
 import java.net.URI;
+import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
@@ -13,7 +15,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.core.JsonValue;
+import com.openai.models.FunctionParameters;
 import com.openai.models.chat.completions.ChatCompletion;
+import com.openai.models.chat.completions.ChatCompletion.Choice.FinishReason;
 
 /**
  * @author <a href="https://github.com/takeseem">杨浩</a>
@@ -71,10 +76,12 @@ public class UtilOpenAI {
 			str += "Reasoning >\n----\n" + reasoningContent.trim() + "\n----\n\n";
 		}
 
-		str += message.path("role").asText() + "\n----\n" + message.path("content").asText().trim();
+		str += message.path("role").asText() + "\n----\n" + message.path("content").asText().trim() + "\n----\n";
 
-		str += "tool_calls: " + toToolCallsStr(message.withArrayProperty("tool_calls"));
-		str += "\n----\n";
+		ArrayNode toolCalls = message.withArrayProperty("tool_calls");
+		if (!toolCalls.isEmpty()) {
+			str += "tool_calls: " + toToolCallsStr(toolCalls) + "\n----\n";
+		}
 
 		str += n.path("model").asText() + '\n';
 		JsonNode usage = n.path("usage");
@@ -103,5 +110,18 @@ public class UtilOpenAI {
 	/** @return choices[0].message.content */
 	public static String getContent(ChatCompletion c) {
 		return c.choices().get(0).message().content().get();
+	}
+
+	public static FunctionParameters buildFuncParams(String json) {
+		Map<String, JsonValue> m = UtilJson.readTree(json).propertyStream()
+				.collect(Collectors.toMap(Map.Entry::getKey, e -> JsonValue.fromJsonNode(e.getValue())));
+		return FunctionParameters.builder().putAllAdditionalProperties(m).build();
+	}
+
+	public static boolean isStop(FinishReason reason) {
+		return FinishReason.STOP.equals(reason);
+	}
+	public static boolean isToolCalls(FinishReason reason) {
+		return FinishReason.TOOL_CALLS.equals(reason);
 	}
 }
