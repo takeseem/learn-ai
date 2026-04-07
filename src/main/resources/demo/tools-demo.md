@@ -1,6 +1,6 @@
 假设有以下工具：
 
-- `UtilFile.writeFile`：文件写入，示例： `UtilFile.writeFile(args)`，args 是 json 格式 `{"file": "文件路径", "content": "要写入的文本", "append": "boolean: 可选值，是否追加"}`)`
+- `UtilFile.writeFile`：文件写入，示例： `UtilFile.writeFile(arguments)`，args 是 json 格式 `{"file": "文件路径", "content": "要写入的文本", "append": "boolean: 可选值，是否追加"}`)`
 
 
 任务要求：
@@ -10,6 +10,7 @@
 
 ```json
 {
-	"_tool": "工具名",
-	"args": 参数
+	"id": "唯一标识",
+	"name": "工具名",
+	"arguments": 参数
 }```

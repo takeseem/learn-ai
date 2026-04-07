@@ -9,9 +9,9 @@ ReAct 是将推理和行动相结合的范式。
 
 ## 工具
 
-- `UtilFile.mkdirs`：创建目录，示例：`UtilFile.mkdirs(args)`，args 是 json 格式 `{"dir": "目录路径"}`
-- `UtilFile.readText`：读取文件，示例：`UtilFile.readText(args)`，args 是 json 格式 `{"file": "文件路径"}`
-- `UtilFile.writeFile`：写入文件，示例： `UtilFile.writeFile(args)`，args 是 json 格式 `{"file": "文件路径", "content": "文件内容", "append": "boolean: 可选值，是否追加", "mkdirs": "boolean: 可选值，是否自动创建父目录"}`)`
+- `UtilFile.mkdirs`：创建目录，示例：`UtilFile.mkdirs(arguments)`，arguments 是 json 格式 `{"dir": "目录路径"}`
+- `UtilFile.readText`：读取文件，示例：`UtilFile.readText(arguments)`，arguments 是 json 格式 `{"file": "文件路径"}`
+- `UtilFile.writeFile`：写入文件，示例： `UtilFile.writeFile(arguments)`，arguments 是 json 格式 `{"file": "文件路径", "content": "文件内容", "append": "boolean: 可选值，是否追加", "mkdirs": "boolean: 可选值，是否自动创建父目录"}`)`
 
 ## 任务要求
 
@@ -23,7 +23,8 @@ ReAct 是将推理和行动相结合的范式。
 
 ```json
 {
-	"_tool": "工具名",
-	"args": 参数
+	"id": "唯一标识",
+	"name": "工具名",
+	"arguments": 参数
 }
 ```

@@ -51,7 +51,7 @@ public class ToolRepo {
 
 		File dir = file.getParentFile();
 		if (dir != null && !dir.exists()) {
-			if (args.path("mkdirs").asBoolean()) {
+			if (args.path("mkdirs").asBoolean(true)) {
 				dir.mkdirs();
 			} else {
 				throw new IllegalArgumentException("目录不存在：" + dir);
@@ -80,13 +80,9 @@ public class ToolRepo {
 	}
 
 	/**
-	 * <a href=
-	 * "https://developers.openai.com/api/docs/guides/function-calling?lang=python#function-tool-example">openai
-	 * 示例</a><br/>
-	 * <a href="https://json-schema.org/understanding-json-schema/about">json schema
-	 * 标准</a><br/>
-	 * <a href=
-	 * "https://github.com/openai/openai-java/blob/main/openai-java-example/src/main/java/com/openai/example/FunctionCallingRawExample.java#L36">FunctionCallingRawExample</a>
+	 * <a href="https://developers.openai.com/api/docs/guides/function-calling?lang=python#function-tool-example">openai 示例</a><br/>
+	 * <a href="https://json-schema.org/understanding-json-schema/about">json schema 标准</a><br/>
+	 * <a href="https://github.com/openai/openai-java/blob/main/openai-java-example/src/main/java/com/openai/example/FunctionCallingRawExample.java#L36">FunctionCallingRawExample</a>
 	 */
 	public static FunctionDefinition getWriteFileFuncDef() {
 		String paramsSchemal = """
