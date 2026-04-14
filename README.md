@@ -20,3 +20,16 @@
     - 观察（Observation）：接收工具执行的结果
     - 迭代：基于观察结果继续思考和行动，直到完成任务
 1. [ReActToolsDemo](src/main/java/com/takeseem/learn/ai/demo/ReActToolsDemo.java)：LLM tools 能力。参考：[LM Studio OpenAI tools](https://lmstudio.ai/docs/developer/openai-compat/tools)，[OpenAI API](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create)，[Function calling](https://developers.openai.com/api/docs/guides/function-calling)
+
+## Spring AI Demo
+
+- [Spring AI](https://spring.io/projects/spring-ai) 最强 AI 框架，优势：设计和扩展能力，[文档](https://docs.spring.io/spring-ai/reference/concepts.html)清晰易懂。
+
+### 贪吃蛇网页游戏
+
+- [ ] 基于 Spring AI 搭建 ReAct Agent 框架。评测：输入任务、使用 ReAct 范式完成任务。
+- [ ] 单模型完成：实现一个简单的贪吃蛇网页游戏。
+- [ ] 加入自动评测能力，最大重试次数：2次。
+- [ ] 多模型完成：实现一个简单的贪吃蛇网页游戏。
+- [ ] 模型路由、自动评测、数据反馈训练策略。
+
