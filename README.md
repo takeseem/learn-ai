@@ -28,8 +28,13 @@
 ### 贪吃蛇网页游戏
 
 - [ ] 基于 Spring AI 搭建 ReAct Agent 框架。评测：输入任务、使用 ReAct 范式完成任务。
+  - [SpringAICliApp](src/main/java/com/takeseem/learn/ai/spring/SpringAICliApp.java)
 - [ ] 单模型完成：实现一个简单的贪吃蛇网页游戏。
 - [ ] 加入自动评测能力，最大重试次数：2次。
 - [ ] 多模型完成：实现一个简单的贪吃蛇网页游戏。
 - [ ] 模型路由、自动评测、数据反馈训练策略。
 
+指引
+
+- [构建 Agent](https://docs.spring.io/spring-ai/reference/api/effective-agents.html) 是 [Anthropic 构建 Agent](https://www.anthropic.com/research/building-effective-agents) 的 Spring 对应实现
+- [依赖管理](https://docs.spring.io/spring-ai/reference/getting-started.html#dependency-management)
